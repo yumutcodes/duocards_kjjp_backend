@@ -1,0 +1,21 @@
+### Test if backend is running
+GET http://localhost:5000/swagger
+
+### Test Google Auth Endpoint
+# Replace "YOUR_GOOGLE_ID_TOKEN_HERE" with actual token from Google OAuth Playground
+POST http://localhost:5000/api/auth/google
+Content-Type: application/json
+
+{
+  "idToken": "YOUR_GOOGLE_ID_TOKEN_HERE"
+}
+
+### Test Regular Login (to verify backend works)
+POST http://localhost:5000/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "test@example.com",
+  "password": "Test123!@#"
+}
+
