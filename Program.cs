@@ -3,6 +3,8 @@ using FitnessApp.Api.Features.Auth;
 using FitnessApp.Api.Infrastructure.Data;
 using FitnessApp.Api.Infrastructure.Repositories;
 using FitnessApp.Api.Infrastructure.Services;
+using FitnessApp.Api.Shared.Extensions;
+using FitnessApp.Api.Shared.Middleware;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -16,6 +18,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add controllers
 builder.Services.AddControllers();
+
+// Add FluentValidation
+builder.Services.AddFluentValidators();
 
 // Configure CORS (Cross-Origin Resource Sharing)
 // Allows frontend applications from different domains to access the API
@@ -217,6 +222,9 @@ if (app.Environment.IsDevelopment())
     });
 }
 
+// Global exception handling - Must be first in the pipeline
+app.UseExceptionHandlingMiddleware();
+
 // HTTPS Redirection (redirect HTTP to HTTPS)
 // Disabled in development for easier testing
 if (!app.Environment.IsDevelopment())
@@ -235,32 +243,6 @@ app.UseAuthorization();
 
 // Map controllers
 app.MapControllers();
-
-// Global exception handling middleware (optional but recommended)
-app.UseExceptionHandler(errorApp =>
-{
-    errorApp.Run(async context =>
-    {
-        context.Response.StatusCode = 500;
-        context.Response.ContentType = "application/json";
-
-        var error = context.Features.Get<Microsoft.AspNetCore.Diagnostics.IExceptionHandlerFeature>();
-        if (error != null)
-        {
-            var logger = context.RequestServices.GetRequiredService<ILogger<Program>>();
-            logger.LogError(error.Error, "Unhandled exception occurred");
-
-            await context.Response.WriteAsJsonAsync(new
-            {
-                status = 500,
-                title = "Internal Server Error",
-                detail = app.Environment.IsDevelopment()
-                    ? error.Error.Message
-                    : "An unexpected error occurred"
-            });
-        }
-    });
-});
 
 // ============================================================================
 // DATABASE MIGRATION (Optional - Auto-migrate on startup)

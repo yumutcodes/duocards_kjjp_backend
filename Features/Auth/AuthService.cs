@@ -2,6 +2,8 @@ using FitnessApp.Api.Core.Entities;
 using FitnessApp.Api.Features.Auth.DTOs;
 using FitnessApp.Api.Infrastructure.Repositories;
 using FitnessApp.Api.Infrastructure.Services;
+using FitnessApp.Api.Shared.Constants;
+using FitnessApp.Api.Shared.Exceptions;
 
 namespace FitnessApp.Api.Features.Auth;
 
@@ -92,7 +94,7 @@ public class AuthService : IAuthService
             if (await _authRepository.EmailExistsAsync(request.Email))
             {
                 _logger.LogWarning("Registration failed: Email {Email} already exists", request.Email);
-                throw new InvalidOperationException("An account with this email already exists");
+                throw new ConflictException("An account with this email already exists", AuthConstants.ErrorCodes.EmailAlreadyExists);
             }
 
             // Hash the password
@@ -123,7 +125,7 @@ public class AuthService : IAuthService
             // Generate tokens and return response
             return await GenerateAuthResponseAsync(user, ipAddress, userAgent);
         }
-        catch (InvalidOperationException)
+        catch (ConflictException)
         {
             // Re-throw business logic exceptions
             throw;
@@ -131,7 +133,7 @@ public class AuthService : IAuthService
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error during registration for email {Email}", request.Email);
-            throw new InvalidOperationException("An error occurred during registration", ex);
+            throw new AppException("An error occurred during registration", ex);
         }
     }
 
@@ -163,21 +165,21 @@ public class AuthService : IAuthService
             if (user == null || string.IsNullOrEmpty(user.PasswordHash))
             {
                 _logger.LogWarning("Login failed: Invalid credentials for email {Email}", request.Email);
-                throw new UnauthorizedAccessException("Invalid email or password");
+                throw new UnauthorizedException("Invalid email or password", AuthConstants.ErrorCodes.InvalidCredentials);
             }
 
             // Verify password
             if (!_passwordHashingService.VerifyPassword(request.Password, user.PasswordHash))
             {
                 _logger.LogWarning("Login failed: Invalid password for email {Email}", request.Email);
-                throw new UnauthorizedAccessException("Invalid email or password");
+                throw new UnauthorizedException("Invalid email or password", AuthConstants.ErrorCodes.InvalidCredentials);
             }
 
             // Check if account is active
             if (!user.IsActive)
             {
                 _logger.LogWarning("Login failed: Account {UserId} is inactive", user.Id);
-                throw new UnauthorizedAccessException("This account has been deactivated");
+                throw new UnauthorizedException("This account has been deactivated", AuthConstants.ErrorCodes.AccountInactive);
             }
 
             // Update last login timestamp
@@ -189,7 +191,7 @@ public class AuthService : IAuthService
             // Generate tokens and return response
             return await GenerateAuthResponseAsync(user, ipAddress, userAgent);
         }
-        catch (UnauthorizedAccessException)
+        catch (UnauthorizedException)
         {
             // Re-throw auth exceptions
             throw;
@@ -197,7 +199,7 @@ public class AuthService : IAuthService
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error during login for email {Email}", request.Email);
-            throw new InvalidOperationException("An error occurred during login", ex);
+            throw new AppException("An error occurred during login", ex);
         }
     }
 
@@ -231,7 +233,7 @@ public class AuthService : IAuthService
             if (googleUserInfo == null)
             {
                 _logger.LogWarning("Google login failed: Invalid token");
-                throw new UnauthorizedAccessException("Invalid Google token");
+                throw new UnauthorizedException("Invalid Google token", AuthConstants.ErrorCodes.InvalidGoogleToken);
             }
 
             _logger.LogInformation("Google token verified for email {Email}", googleUserInfo.Email);
@@ -313,7 +315,7 @@ public class AuthService : IAuthService
             if (!user.IsActive)
             {
                 _logger.LogWarning("Google login failed: Account {UserId} is inactive", user.Id);
-                throw new UnauthorizedAccessException("This account has been deactivated");
+                throw new UnauthorizedException("This account has been deactivated", AuthConstants.ErrorCodes.AccountInactive);
             }
 
             _logger.LogInformation("User {UserId} logged in successfully via Google", user.Id);
@@ -321,14 +323,14 @@ public class AuthService : IAuthService
             // Generate tokens and return response
             return await GenerateAuthResponseAsync(user, ipAddress, userAgent);
         }
-        catch (UnauthorizedAccessException)
+        catch (UnauthorizedException)
         {
             throw;
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error during Google login");
-            throw new InvalidOperationException("An error occurred during Google login", ex);
+            throw new AppException("An error occurred during Google login", ex);
         }
     }
 
@@ -365,7 +367,7 @@ public class AuthService : IAuthService
             if (token == null)
             {
                 _logger.LogWarning("Refresh token not found");
-                throw new UnauthorizedAccessException("Invalid refresh token");
+                throw new UnauthorizedException("Invalid refresh token", AuthConstants.ErrorCodes.InvalidToken);
             }
 
             // Validate token is active
@@ -382,7 +384,9 @@ public class AuthService : IAuthService
                     //     token.UserId, ipAddress, "Possible token reuse detected");
                 }
 
-                throw new UnauthorizedAccessException("Invalid refresh token");
+                throw new UnauthorizedException(
+                    token.IsExpired ? "Refresh token has expired" : "Refresh token has been revoked",
+                    token.IsExpired ? AuthConstants.ErrorCodes.TokenExpired : AuthConstants.ErrorCodes.InvalidToken);
             }
 
             // Get the user
@@ -391,7 +395,7 @@ public class AuthService : IAuthService
             if (user == null || !user.IsActive)
             {
                 _logger.LogWarning("User {UserId} not found or inactive", token.UserId);
-                throw new UnauthorizedAccessException("User not found or inactive");
+                throw new UnauthorizedException("User not found or inactive", AuthConstants.ErrorCodes.AccountInactive);
             }
 
             // Revoke old token (token rotation)
@@ -419,14 +423,14 @@ public class AuthService : IAuthService
                 User = MapUserToDto(user)
             };
         }
-        catch (UnauthorizedAccessException)
+        catch (UnauthorizedException)
         {
             throw;
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error refreshing token");
-            throw new InvalidOperationException("An error occurred while refreshing token", ex);
+            throw new AppException("An error occurred while refreshing token", ex);
         }
     }
 
@@ -452,13 +456,13 @@ public class AuthService : IAuthService
             if (token == null)
             {
                 _logger.LogWarning("Revoke failed: Token not found");
-                throw new InvalidOperationException("Token not found");
+                throw new NotFoundException("Token not found");
             }
 
             if (!token.IsActive)
             {
                 _logger.LogWarning("Revoke failed: Token {TokenId} already inactive", token.Id);
-                throw new InvalidOperationException("Token is already revoked or expired");
+                throw new BadRequestException("Token is already revoked or expired");
             }
 
             await _authRepository.RevokeRefreshTokenAsync(token, ipAddress, "User logout");
