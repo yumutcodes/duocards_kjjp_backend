@@ -1,4 +1,5 @@
 {
+    "dotnet.defaultSolution": "fitnessAppBackend.sln",
     "omnisharp.enableEditorConfigSupport": true,
     "omnisharp.enableMsBuildLoadProjectsOnDemand": false,
     "omnisharp.useModernNet": true,
