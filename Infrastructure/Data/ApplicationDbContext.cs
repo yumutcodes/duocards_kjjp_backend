@@ -91,10 +91,10 @@ public class ApplicationDbContext : DbContext
                 .HasDefaultValue(true);
 
             entity.Property(e => e.CreatedAt)
-                .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                .HasDefaultValueSql("CURRENT_TIMESTAMP(6)");
 
             entity.Property(e => e.UpdatedAt)
-                .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                .HasDefaultValueSql("CURRENT_TIMESTAMP(6)");
         });
 
         // Configure RefreshToken entity
@@ -128,7 +128,7 @@ public class ApplicationDbContext : DbContext
                 .IsRequired();
 
             entity.Property(e => e.CreatedAt)
-                .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                .HasDefaultValueSql("CURRENT_TIMESTAMP(6)");
 
             entity.Property(e => e.CreatedByIp)
                 .HasMaxLength(50);

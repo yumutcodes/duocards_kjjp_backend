@@ -1,4 +1,5 @@
 using System.Text;
+
 using FitnessApp.Api.Features.Auth;
 using FitnessApp.Api.Infrastructure.Data;
 using FitnessApp.Api.Infrastructure.Repositories;
@@ -49,7 +50,10 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
-    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString),
+    // Use MySQL 8.0 as the server version (change if using different version)
+    var serverVersion = new MySqlServerVersion(new Version(8, 0, 35));
+
+    options.UseMySql(connectionString, serverVersion,
         mySqlOptions =>
         {
             // Enable retry on transient failures

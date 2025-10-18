@@ -1,4 +1,14 @@
+C:\Users\umutf\dot.netProjects\fitnessAppBackend\FitnessApp.Api\bin\Debug\net8.0\appsettings.Development.json
+C:\Users\umutf\dot.netProjects\fitnessAppBackend\FitnessApp.Api\bin\Debug\net8.0\appsettings.json
+C:\Users\umutf\dot.netProjects\fitnessAppBackend\FitnessApp.Api\bin\Debug\net8.0\FitnessApp.Api.exe
+C:\Users\umutf\dot.netProjects\fitnessAppBackend\FitnessApp.Api\bin\Debug\net8.0\FitnessApp.Api.deps.json
+C:\Users\umutf\dot.netProjects\fitnessAppBackend\FitnessApp.Api\bin\Debug\net8.0\FitnessApp.Api.runtimeconfig.json
+C:\Users\umutf\dot.netProjects\fitnessAppBackend\FitnessApp.Api\bin\Debug\net8.0\FitnessApp.Api.dll
+C:\Users\umutf\dot.netProjects\fitnessAppBackend\FitnessApp.Api\bin\Debug\net8.0\FitnessApp.Api.pdb
 C:\Users\umutf\dot.netProjects\fitnessAppBackend\FitnessApp.Api\bin\Debug\net8.0\BCrypt.Net-Next.dll
+C:\Users\umutf\dot.netProjects\fitnessAppBackend\FitnessApp.Api\bin\Debug\net8.0\FluentValidation.dll
+C:\Users\umutf\dot.netProjects\fitnessAppBackend\FitnessApp.Api\bin\Debug\net8.0\FluentValidation.AspNetCore.dll
+C:\Users\umutf\dot.netProjects\fitnessAppBackend\FitnessApp.Api\bin\Debug\net8.0\FluentValidation.DependencyInjectionExtensions.dll
 C:\Users\umutf\dot.netProjects\fitnessAppBackend\FitnessApp.Api\bin\Debug\net8.0\Google.Apis.dll
 C:\Users\umutf\dot.netProjects\fitnessAppBackend\FitnessApp.Api\bin\Debug\net8.0\Google.Apis.Auth.dll
 C:\Users\umutf\dot.netProjects\fitnessAppBackend\FitnessApp.Api\bin\Debug\net8.0\Google.Apis.Core.dll
@@ -106,6 +116,9 @@ C:\Users\umutf\dot.netProjects\fitnessAppBackend\FitnessApp.Api\obj\Debug\net8.0
 C:\Users\umutf\dot.netProjects\fitnessAppBackend\FitnessApp.Api\obj\Debug\net8.0\staticwebassets\msbuild.buildTransitive.FitnessApp.Api.props
 C:\Users\umutf\dot.netProjects\fitnessAppBackend\FitnessApp.Api\obj\Debug\net8.0\staticwebassets.pack.json
 C:\Users\umutf\dot.netProjects\fitnessAppBackend\FitnessApp.Api\obj\Debug\net8.0\scopedcss\bundle\FitnessApp.Api.styles.css
+C:\Users\umutf\dot.netProjects\fitnessAppBackend\FitnessApp.Api\obj\Debug\net8.0\FitnessA.72BD21B7.Up2Date
 C:\Users\umutf\dot.netProjects\fitnessAppBackend\FitnessApp.Api\obj\Debug\net8.0\FitnessApp.Api.dll
 C:\Users\umutf\dot.netProjects\fitnessAppBackend\FitnessApp.Api\obj\Debug\net8.0\refint\FitnessApp.Api.dll
 C:\Users\umutf\dot.netProjects\fitnessAppBackend\FitnessApp.Api\obj\Debug\net8.0\FitnessApp.Api.pdb
+C:\Users\umutf\dot.netProjects\fitnessAppBackend\FitnessApp.Api\obj\Debug\net8.0\FitnessApp.Api.genruntimeconfig.cache
+C:\Users\umutf\dot.netProjects\fitnessAppBackend\FitnessApp.Api\obj\Debug\net8.0\ref\FitnessApp.Api.dll
