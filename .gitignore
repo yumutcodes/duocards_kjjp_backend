@@ -1,2 +1,12 @@
+# Hassas bilgileri içeren dosyanız (BU ÇOK ÖNEMLİ)
 GOOGLE_AUTH_SETUP.md
-appsettings.Development.json
+.env
+
+# .NET projesi için standart olarak ignore edilenler
+[Bb]in/
+[Oo]bj/
+
+# Visual Studio'nun ürettiği geçici dosyalar
+*.user
+*.suo
+*.vs/
