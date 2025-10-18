@@ -2,7 +2,11 @@
   "permissions": {
     "allow": [
       "Read(//c/Users/umutf/dot.netProjects/fitnessAppBackend/**)",
-      "Bash(dir:*)"
+      "Bash(dir:*)",
+      "Bash(dotnet build)",
+      "Bash(dotnet ef database update)",
+      "Bash(dotnet run --no-build)",
+      "Bash(timeout /t 5)"
     ],
     "deny": [],
     "ask": []
